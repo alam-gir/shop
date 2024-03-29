@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decorhat | Your Order Is Comfirm.</title>
+  </head>
+  <body>
+    <h1>Hey <strong><%=shippingAddress.name%></strong></h1>
+    <p>Your order has been confirmed.</p>
+
+    <h2>Order Details</h2>
+    <p><strong>orderId : </strong> <%=order.id%></p>
+    <p><strong>Order Date : </strong> <%=order.createdAt%></p>
+  </body>
+</html>
