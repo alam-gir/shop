@@ -2,102 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 240 5% 98%; /* Light background */
-    --foreground: 0 0% 10%; /* Dark foreground */
-   
-    --card: 240 5% 98%; /* Light card background */
-    --card-foreground: 0 0% 10%; /* Dark card foreground */
-   
-    --popover: 240 5% 98%; /* Light popover background */
-    --popover-foreground: 0 0% 10%; /* Dark popover foreground */
-   
-    --primary: 240 5% 50%; /* Primary color */
-    --primary-foreground: 0 0% 10%; /* Primary foreground */
-   
-    --secondary: 240 5% 85%; /* Secondary color */
-    --secondary-foreground: 0 0% 10%; /* Secondary foreground */
-   
-    --muted: 240 5% 95%; /* Muted color */
-    --muted-foreground: 0 0% 10%; /* Muted foreground */
-   
-    --accent: 270 50% 50%; /* Accent color, a warm yellow */
-    --accent-foreground: 0 0% 10%; /* Accent foreground */
-   
-    --destructive: 0 62.8% 30.6%; /* Destructive color */
-    --destructive-foreground: 0 0% 10%; /* Destructive foreground */
-   
-    --border: 240 5% 85%; /* Border color */
-    --input: 240 5% 95%; /* Input background */
-    --ring: 240 5% 20%; /* Ring color */
-   
-    --success: 120 50% 50%; /* Success color */
-    --success-foreground: 0 0% 10%; /* Success foreground */
-   
-    --warning: 45 100% 50%; /* Warning color */
-    --warning-foreground: 0 0% 10%; /* Warning foreground */
-   
-    --info: 210 50% 50%; /* Info color */
-    --info-foreground: 0 0% 10%; /* Info foreground */
-   
-    --disabled: 240 5% 85%; /* Disabled color */
-    --disabled-foreground: 0 0% 10%; /* Disabled foreground */
-   
-    --hover: 240 5% 70%; /* Hover color */
-    --hover-foreground: 0 0% 10%; /* Hover foreground */
-   
-    --focus: 240 5% 60%; /* Focus color */
-    --focus-foreground: 0 0% 10%; /* Focus foreground */
-   }
-  
-   .dark {
-    --background: 210 25% 15%; /* Dark blueish background */
-    --foreground: 240 5% 90%; /* Light foreground */
-   
-    --card: 210 25% 20%; /* Dark blueish card background */
-    --card-foreground: 240 5% 90%; /* Light card foreground */
-   
-    --popover: 210 25% 20%; /* Dark blueish popover background */
-    --popover-foreground: 240 5% 90%; /* Light popover foreground */
-   
-    --primary: 240 5% 90%; /* Primary color */
-    --primary-foreground: 240 5% 10%; /* Primary foreground */
-   
-    --secondary: 240 5% 70%; /* Secondary color */
-    --secondary-foreground: 240 5% 90%; /* Secondary foreground */
-   
-    --muted: 240 5% 80%; /* Muted color */
-    --muted-foreground: 240 5% 90%; /* Muted foreground */
-   
-    --accent: 240 5% 70%; /* Accent color */
-    --accent-foreground: 240 5% 90%; /* Accent foreground */
-   
-    --destructive: 0 62.8% 30.6%; /* Destructive color */
-    --destructive-foreground: 240 5% 90%; /* Destructive foreground */
-   
-    --border: 240 5% 70%; /* Border color */
-    --input: 240 5% 80%; /* Input background */
-    --ring: 240 5% 20%; /* Ring color */
-   
-    --success: 120 50% 50%; /* Success color */
-    --success-foreground: 240 5% 90%; /* Success foreground */
-   
-    --warning: 45 100% 50%; /* Warning color */
-    --warning-foreground: 240 5% 90%; /* Warning foreground */
-   
-    --info: 210 50% 50%; /* Info color */
-    --info-foreground: 240 5% 90%; /* Info foreground */
-   
-    --disabled: 240 5% 70%; /* Disabled color */
-    --disabled-foreground: 240 5% 90%; /* Disabled foreground */
-   
-    --hover: 240 5% 60%; /* Hover color */
-    --hover-foreground: 240 5% 90%; /* Hover foreground */
-   
-    --focus: 240 5% 50%; /* Focus color */
-    --focus-foreground: 240 5% 90%; /* Focus foreground */
-   }
-   
+
+html, body {
+  margin: 0;
+  padding: 0;
  }
- 
+
+ *, *::before, *::after {
+  box-sizing: border-box;
+ }
+
+ ::-webkit-scrollbar {
+  width: 5px;
+  background: rgb(234, 234, 234);
+ }
+
+ ::-webkit-scrollbar-thumb {
+  background: rgb(183, 183, 183);
+ }
+
+@layer base {
+
+  @layer base {
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 240 10% 3.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 10% 3.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 240 10% 3.9%;
+      --primary: 142.1 76.2% 36.3%;
+      --primary-foreground: 355.7 100% 97.3%;
+      --secondary: 240 4.8% 95.9%;
+      --secondary-foreground: 240 5.9% 10%;
+      --muted: 240 4.8% 95.9%;
+      --muted-foreground: 240 3.8% 46.1%;
+      --accent: 240 4.8% 95.9%;
+      --accent-foreground: 240 5.9% 10%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 240 5.9% 90%;
+      --input: 240 5.9% 90%;
+      --ring: 142.1 76.2% 36.3%;
+      --radius: 0.5rem;
+    }
+  
+    .dark {
+      --background: 20 14.3% 4.1%;
+      --foreground: 0 0% 95%;
+      --card: 24 9.8% 10%;
+      --card-foreground: 0 0% 95%;
+      --popover: 0 0% 9%;
+      --popover-foreground: 0 0% 95%;
+      --primary: 142.1 70.6% 45.3%;
+      --primary-foreground: 144.9 80.4% 10%;
+      --secondary: 240 3.7% 15.9%;
+      --secondary-foreground: 0 0% 98%;
+      --muted: 0 0% 15%;
+      --muted-foreground: 240 5% 64.9%;
+      --accent: 12 6.5% 15.1%;
+      --accent-foreground: 0 0% 98%;
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 0 85.7% 97.3%;
+      --border: 240 3.7% 15.9%;
+      --input: 240 3.7% 15.9%;
+      --ring: 142.4 71.8% 29.2%;
+    }
+  }
+  
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

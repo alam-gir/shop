@@ -64,6 +64,8 @@ model Category {
   id              String     @id @default(uuid())
   name            String     @unique
   banner          String?
+  icon            String?
+  iconPublic_id   String?
   bannerPublic_id String?
   products        Product[]
   parentId        String?

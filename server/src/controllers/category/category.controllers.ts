@@ -7,7 +7,13 @@ import { cache } from "./../../app";
 export const categoryControllers = {
   create: asyncHandler(async (req: Request, res: Response) => {
     try {
-      const banner = req.file;
+      const files = req.files as unknown as {
+        banner: Express.Multer.File[] | undefined;
+        icon: Express.Multer.File[] | undefined;
+      };
+      const banner = files.banner ? files.banner[0] : undefined;
+      const icon = files.icon ? files.icon[0] : undefined;
+
       const { name } = req.body as { name: string };
       if (!name) throw new ApiError(400, "Category name is required!");
 
@@ -15,11 +21,11 @@ export const categoryControllers = {
 
       if (isExist) throw new ApiError(400, "Category already exist!");
 
-      const category = await categoryServices.create({ name, banner });
+      const category = await categoryServices.create({ name, banner, icon });
 
       //remove category tree from cache
       cache.del("categoryFullTree");
-      cache.del(`categoryTree-${category.id}`);
+      // cache.del(`categoryTree-${category.id}`);
 
       return res.status(200).json({
         success: true,
@@ -32,7 +38,13 @@ export const categoryControllers = {
   }),
   createSub: asyncHandler(async (req: Request, res: Response) => {
     try {
-      const banner = req.file;
+      const files = req.files as unknown as {
+        banner: Express.Multer.File[] | undefined;
+        icon: Express.Multer.File[] | undefined;
+      };
+      const banner = files.banner ? files.banner[0] : undefined;
+      const icon = files.icon ? files.icon[0] : undefined;
+      
       const { id: parentId } = req.params;
       const { name } = req.body as { name: string };
 
@@ -45,6 +57,7 @@ export const categoryControllers = {
       const category = await categoryServices.createSubCategory({
         name,
         parentId,
+        icon,
         banner,
       });
 

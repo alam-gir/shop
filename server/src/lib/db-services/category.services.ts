@@ -14,20 +14,30 @@ export const categoryServices = {
   create: async ({
     name,
     banner,
+    icon,
   }: {
     name: string;
     banner: Express.Multer.File | undefined;
+    icon: Express.Multer.File | undefined;
   }) => {
     try {
       if (!name) throw new ApiError(400, "Category name is required!");
 
-      const bannerDetails = await uploadCategoryBanner(banner);
+      const bannerDetailsPromise = uploadCategoryBanner(banner);
+      const iconDetailsPromise = uploadCategoryIcon(icon);
+
+      const [bannerDetails, iconDetails] = await Promise.all([
+        bannerDetailsPromise,
+        iconDetailsPromise,
+      ]);
 
       return await prisma.category.create({
         data: {
           name,
           banner: bannerDetails.url,
           bannerPublic_id: bannerDetails.public_id,
+          icon: iconDetails.url,
+          iconPublic_id: iconDetails.public_id,
         },
       });
     } catch (error) {
@@ -38,23 +48,33 @@ export const categoryServices = {
   createSubCategory: async ({
     name,
     banner,
+    icon,
     parentId,
   }: {
     name: string;
     banner: Express.Multer.File | undefined;
+    icon: Express.Multer.File | undefined;
     parentId: string;
   }) => {
     try {
       if (!name) throw new ApiError(400, "Sub category name is required!");
       if (!parentId) throw new ApiError(400, "Parent category id is required!");
 
-      const bannerDetails = await uploadCategoryBanner(banner);
+      const bannerDetailsPromise = uploadCategoryBanner(banner);
+      const iconDetailsPromise = uploadCategoryIcon(icon);
+
+      const [bannerDetails, iconDetails] = await Promise.all([
+        bannerDetailsPromise,
+        iconDetailsPromise,
+      ]);
 
       return await prisma.category.create({
         data: {
           name,
           banner: bannerDetails.url,
           bannerPublic_id: bannerDetails.public_id,
+          icon: iconDetails.url,
+          iconPublic_id: iconDetails.public_id,
           parent: {
             connect: { id: parentId },
           },
@@ -92,7 +112,7 @@ export const categoryServices = {
           childrens: {
             include: {
               childrens: true,
-              discount: true
+              discount: true,
             },
           },
         },
@@ -139,10 +159,12 @@ export const categoryServices = {
     categoryId,
     name,
     banner,
+    icon,
   }: {
     categoryId: string;
     name: string;
     banner?: Express.Multer.File;
+    icon?: Express.Multer.File;
   }) => {
     try {
       if (!name) throw new ApiError(400, "Category name is required!");
@@ -152,28 +174,47 @@ export const categoryServices = {
 
       let updatedCategory: Category;
 
-      if (banner) {
-        // upload new one,
-        const uploadedBanner = await uploadCategoryBanner(banner);
-        // remove prev
-        if (category.bannerPublic_id) {
-          await removeFromCloudinary(category.bannerPublic_id!);
+      if (banner || icon) {
+        if (banner) {
+          // upload new one,
+          const uploadedBanner = await uploadCategoryBanner(banner);
+          // remove prev
+          if (category.bannerPublic_id) {
+            await removeFromCloudinary(category.bannerPublic_id!);
+          }
+          // update
+          updatedCategory = await prisma.category.update({
+            where: { id: category.id },
+            data: {
+              name,
+              banner: uploadedBanner.url,
+              bannerPublic_id: uploadedBanner.public_id,
+            },
+          });
         }
-        // update
-        updatedCategory = await prisma.category.update({
-          where: { id: category.id },
-          data: {
-            name,
-            banner: uploadedBanner.url,
-            bannerPublic_id: uploadedBanner.public_id,
-          },
-        });
-      } else {
-        updatedCategory = await prisma.category.update({
-          where: { id: categoryId },
-          data: { name },
-        });
+        if (icon) {
+          // upload new one,
+          const uploadedIcon = await uploadCategoryIcon(banner);
+          // remove prev
+          if (category.iconPublic_id) {
+            await removeFromCloudinary(category.bannerPublic_id!);
+          }
+          // update
+          updatedCategory = await prisma.category.update({
+            where: { id: category.id },
+            data: {
+              name,
+              banner: uploadedIcon.url,
+              bannerPublic_id: uploadedIcon.public_id,
+            },
+          });
+        }
       }
+
+      updatedCategory = await prisma.category.update({
+        where: { id: categoryId },
+        data: { name },
+      });
 
       return updatedCategory;
     } catch (error) {
@@ -213,6 +254,10 @@ export const categoryServices = {
           "Category has products or sub caegory, cannot delete"
         );
 
+      if (category.bannerPublic_id)
+        await removeFromCloudinary(category.bannerPublic_id);
+      if (category.iconPublic_id)
+        await removeFromCloudinary(category.iconPublic_id);
       return await prisma.category.delete({ where: { id: categoryId } });
     } catch (error) {
       throw error;
@@ -239,6 +284,30 @@ const uploadCategoryBanner = async (banner?: Express.Multer.File) => {
     }
 
     return bannerDetails;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const uploadCategoryIcon = async (icon?: Express.Multer.File) => {
+  try {
+    const iconDetails = {
+      public_id: "",
+      url: "",
+    };
+
+    if (icon) {
+      const uploadedIcon = await uploadPromise({
+        file: icon,
+        folder: process.env.CATEGORY_ICON_FOLDER!,
+        progressEventName: "category-icon-upload-progress",
+      });
+
+      iconDetails.public_id = uploadedIcon.public_id;
+      iconDetails.url = uploadedIcon.secure_url;
+    }
+
+    return iconDetails;
   } catch (error) {
     throw error;
   }

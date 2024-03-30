@@ -10,7 +10,10 @@ router
   .route("/")
   .get(categoryControllers.getFullTree)
   .post(
-    upload.single("banner"),
+    upload.fields([
+      { name: "banner", maxCount: 1 },
+      { name: "icon", maxCount: 1 },
+    ]),
     isAuthenticate,
     isAdmin,
     categoryControllers.create
@@ -20,12 +23,23 @@ router
   .route("/:id")
   .get(categoryControllers.getSingle)
   .post(
-    upload.single("banner"),
+    upload.fields([
+      { name: "banner", maxCount: 1 },
+      { name: "icon", maxCount: 1 },
+    ]),
     isAuthenticate,
     isAdmin,
     categoryControllers.createSub
   )
-  .patch(upload.single("banner"),isAuthenticate, isAdmin, categoryControllers.update)
+  .patch(
+    upload.fields([
+      { name: "banner", maxCount: 1 },
+      { name: "icon", maxCount: 1 },
+    ]),
+    isAuthenticate,
+    isAdmin,
+    categoryControllers.update
+  )
   .delete(isAuthenticate, isAdmin, categoryControllers.remove);
 
 router.route("/:id/tree").get(categoryControllers.getTree);
